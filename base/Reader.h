@@ -26,14 +26,11 @@ void importTrainFiles() {
 	FILE *fin;
 	int tmp;
 
-	fin = fopen((inPath + "relation2id.txt").c_str(), "r");
-	tmp = fscanf(fin, "%ld", &relationTotal);
-	printf("The total of relations is %ld.\n", relationTotal);
-	fclose(fin);
-
-	fin = fopen((inPath + "entity2id.txt").c_str(), "r");
+	fin = fopen((inPath + "stat.txt").c_str(), "r");
 	tmp = fscanf(fin, "%ld", &entityTotal);
 	printf("The total of entities is %ld.\n", entityTotal);
+	tmp = fscanf(fin, "%ld", &relationTotal);
+	printf("The total of relations is %ld.\n", relationTotal);
 	fclose(fin);
 
 	fin = fopen((inPath + "train2id.txt").c_str(), "r");
@@ -93,6 +90,7 @@ void importTrainFiles() {
 			lefRel[trainRel[i].h] = i;
 		}
 	}
+
 	lefHead[trainHead[0].h] = 0;
 	rigHead[trainHead[trainTotal - 1].h] = trainTotal - 1;
 	lefTail[trainTail[0].t] = 0;
@@ -128,14 +126,13 @@ extern "C"
 void importTestFiles() {
     FILE *fin;
     INT tmp;
-    
-    fin = fopen((inPath + "relation2id.txt").c_str(), "r");
-    tmp = fscanf(fin, "%ld", &relationTotal);
-    fclose(fin);
 
-    fin = fopen((inPath + "entity2id.txt").c_str(), "r");
-    tmp = fscanf(fin, "%ld", &entityTotal);
-    fclose(fin);
+    fin = fopen((inPath + "stat.txt").c_str(), "r");
+	tmp = fscanf(fin, "%ld", &entityTotal);
+	printf("The total of entities is %ld.\n", entityTotal);
+	tmp = fscanf(fin, "%ld", &relationTotal);
+	printf("The total of relations is %ld.\n", relationTotal);
+	fclose(fin);
 
     FILE* f_kb1 = fopen((inPath + "test2id.txt").c_str(), "r");
     FILE* f_kb2 = fopen((inPath + "train2id.txt").c_str(), "r");
@@ -218,6 +215,11 @@ void importTypeFiles() {
     INT total_lef = 0;
     INT total_rig = 0;
     FILE* f_type = fopen((inPath + "type_constrain.txt").c_str(),"r");
+    if (f_type == nullptr) {
+//		std::cout << '`' << inPath << "type_constrain.txt" << '`'
+//		          << " does not exist" << std::endl;
+		return;
+	}
     INT tmp;
     tmp = fscanf(f_type, "%ld", &tmp);
     for (INT i = 0; i < relationTotal; i++) {
